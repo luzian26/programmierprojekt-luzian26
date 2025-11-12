@@ -1,0 +1,9 @@
+Include/*
+Lib/*
+Scripts/*
+pyvenv.cfg
+__pycache__/*
+share/*
+venv/*
+trained_q_table.pkl
+UML - 2048.png
