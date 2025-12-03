@@ -16,7 +16,7 @@ class Game(tk.Frame):
         self.master.title('2048')
         self.main_grid = Board(self)
         self.score_board = ScoreBoard(self)
-        self.mainloop()
+        self.mainloop() 
        
 
 class Board(tk.Frame):
