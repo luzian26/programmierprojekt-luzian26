@@ -17,12 +17,18 @@ class Game(tk.Frame):
         self.main_grid = Board(self)
         self.mainloop()
 
+
 class Board(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self)
         tk.Frame(self, bg=c.GRID_COLOR, bd=3, width=400, height=400)
         self.grid(pady=(80, 0))
-
+        self.cells = []
+        for row in range(0, 4):
+            self.cells.append([])
+            for col in range(0, 4):
+                self.cells[row].append(Cell(self, row, col))
+        
     def configure_cell(row:int, col:int, value:int):
         pass
 
@@ -54,6 +60,6 @@ class ScoreBoard():
 
 # Spiel spielen
 if __name__ == "__main__":
-    # myGame = Game2048()
+    myGame = Game()
     # myGame.start_game()
     pass
