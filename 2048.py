@@ -15,8 +15,9 @@ class Game(tk.Frame):
         self.grid()
         self.master.title('2048')
         self.main_grid = Board(self)
+        self.score_board = ScoreBoard(self)
         self.mainloop()
-
+       
 
 class Board(tk.Frame):
     def __init__(self, parent):
@@ -38,17 +39,33 @@ class Cell():
         self.number = tk.Label(parent, bg=c.EMPTY_CELL_COLOR)
         self.frame.grid(row=row, column=col, padx=5, pady=5)
         self.number.grid(row=row, column=col)
+        tk.Frame.__init__(self, parent)
+        self.config(bg=c.EMPTY_CELL_COLOR,
+            width=100,
+            height=100)
+        self.grid(row=row, column=col, padx=5, pady=5)
 
+        self.number = tk.Label(
+            self,
+            bg=c.EMPTY_CELL_COLOR)
+        self.number.place(relx=0.5, rely=0.5, anchor="center")
+
+        
     def configure(value:int):
         pass
 
   
 
-class ScoreBoard():
-    def __init__(self):
+class ScoreBoard(tk.Frame):
+    def __init__(self, parent):
         self.score = 0
-        frame = tk.Frame
-        label = tk.Label
+        self.frame = tk.Frame
+        self.label = tk.Label 
+        tk.Frame.__init__(self, parent)
+        self.grid(row=0, column=0, pady=10)
+
+        tk.Label(self, text="Score", font=c.SCORE_LABEL_FONT).grid(row=0)
+        tk.Label(self, text=self.score, font=c.SCORE_FONT).grid(row=1)
 
     def add_to_score(plus:int):
         pass 
@@ -61,5 +78,5 @@ class ScoreBoard():
 # Spiel spielen
 if __name__ == "__main__":
     myGame = Game()
-    # myGame.start_game()
+    myGame.start_game()
     pass
