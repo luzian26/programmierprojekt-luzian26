@@ -1,7 +1,7 @@
 # Imports
 import tkinter as tk
 import colors as c
-
+import random
 
 # Klassen definieren
 class Game2048:
@@ -16,14 +16,37 @@ class Game(tk.Frame):
         self.master.title('2048')
         self.main_grid = Board(self)
         self.score_board = ScoreBoard(self)
-        self.mainloop() 
+        self.matrix = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ]
+        
+        #self.mainloop()
+        #self.start_game()
+
+    def start_game(self):
+        self.add_new_cell()
+
+    def add_new_cell(self):
+        freie_Felder = []
+        for row in range(0, 4):
+            for col in range(0, 4):
+                if self.matrix[row][col] == 0:
+                    freie_Felder.append((row, col))
+
+        print(freie_Felder)
+
+    def start_game(self):
+        pass
        
 
 class Board(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self)
-        tk.Frame(self, bg=c.GRID_COLOR, bd=3, width=400, height=400)
-        self.grid(pady=(80, 0))
+        tk.Frame.__init__(self, parent)
+        self.config(bg=c.GRID_COLOR, bd=3, width=400, height=400)
+        self.grid(row=1, column=0)
         self.cells = []
         for row in range(0, 4):
             self.cells.append([])
@@ -33,7 +56,7 @@ class Board(tk.Frame):
     def configure_cell(row:int, col:int, value:int):
         pass
 
-class Cell():
+class Cell(tk.Frame):
     def __init__(self, parent, row, col):
         self.frame = tk.Frame(parent, bg=c.EMPTY_CELL_COLOR, width=100, height=100)
         self.number = tk.Label(parent, bg=c.EMPTY_CELL_COLOR)
@@ -51,8 +74,19 @@ class Cell():
         self.number.place(relx=0.5, rely=0.5, anchor="center")
 
         
-    def configure(value:int):
-        pass
+    def configure(self, value):
+        if value == 0:
+            self.config(bg=c.EMPTY_CELL_COLOR)
+            self.number.config(
+                bg=c.EMPTY_CELL_COLOR, text="")
+        else:
+            self.config(
+                bg=c.CELL_COLORS[value])
+            self.number.config(
+                bg=c.CELL_COLORS[value],
+                fg=c.CELL_NUMBER_COLORS[value],
+                font=c.CELL_NUMBER_FONTS[value],
+                text=str(value))
 
   
 
@@ -77,6 +111,8 @@ class ScoreBoard(tk.Frame):
 
 # Spiel spielen
 if __name__ == "__main__":
+    root = tk.Tk()
     myGame = Game()
     myGame.start_game()
-    pass
+    root.mainloop()
+ 
