@@ -22,6 +22,10 @@ class Game(tk.Frame):
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ]
+        self.master.bind("<Left>", self.left)
+        self.master.bind("<Right>", self.right)
+        self.master.bind("<Up>", self.up)
+        self.master.bind("<Down>", self.down)
 
     def start_game(self):
         self.add_new_cell()
@@ -42,9 +46,19 @@ class Game(tk.Frame):
         self.matrix[ausgewähltesFeld[0]][ausgewähltesFeld[1]] = wert
         self.update_GUI(ausgewähltesFeld[0], ausgewähltesFeld[1], wert)
         print(freie_Felder)
-        print(self.matrix)
-        
-       
+        print(self.matrix)  
+
+    def left(self, event):
+        print("Nach Links schieben")
+    
+    def right(self, event):
+        print("Nach Rechts schieben") 
+    
+    def up(self, event):
+        print("Nach Oben schieben") 
+    
+    def down(self, event):
+        print("Nach Unten schieben")
 
 class Board(tk.Frame):
     def __init__(self, parent):
