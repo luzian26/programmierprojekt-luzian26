@@ -10,8 +10,8 @@ class Game2048:
 
 
 class Game(tk.Frame):
-    def __init__(self):
-        tk.Frame.__init__(self)
+    def __init__(self, master):
+        super().__init__(master)
         self.grid()
         self.master.title('2048')
         self.main_grid = Board(self)
@@ -22,12 +22,14 @@ class Game(tk.Frame):
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ]
-        
-        #self.mainloop()
-        #self.start_game()
 
     def start_game(self):
         self.add_new_cell()
+        self.add_new_cell()
+
+    def update_GUI(self, row, col, value):
+        self.main_grid.configure_cell(row, col, value)
+
 
     def add_new_cell(self):
         freie_Felder = []
@@ -35,11 +37,13 @@ class Game(tk.Frame):
             for col in range(0, 4):
                 if self.matrix[row][col] == 0:
                     freie_Felder.append((row, col))
-
+        ausgewähltesFeld = random.choice(freie_Felder)
+        wert = random.choice([2, 2, 2, 4])
+        self.matrix[ausgewähltesFeld[0]][ausgewähltesFeld[1]] = wert
+        self.update_GUI(ausgewähltesFeld[0], ausgewähltesFeld[1], wert)
         print(freie_Felder)
-
-    def start_game(self):
-        pass
+        print(self.matrix)
+        
        
 
 class Board(tk.Frame):
@@ -53,8 +57,9 @@ class Board(tk.Frame):
             for col in range(0, 4):
                 self.cells[row].append(Cell(self, row, col))
         
-    def configure_cell(row:int, col:int, value:int):
-        pass
+    def configure_cell(self, row, col, value):
+        self.cells[row][col].configure(value)
+
 
 class Cell(tk.Frame):
     def __init__(self, parent, row, col):
@@ -87,7 +92,6 @@ class Cell(tk.Frame):
                 fg=c.CELL_NUMBER_COLORS[value],
                 font=c.CELL_NUMBER_FONTS[value],
                 text=str(value))
-
   
 
 class ScoreBoard(tk.Frame):
@@ -112,7 +116,6 @@ class ScoreBoard(tk.Frame):
 # Spiel spielen
 if __name__ == "__main__":
     root = tk.Tk()
-    myGame = Game()
+    myGame = Game(root)
     myGame.start_game()
     root.mainloop()
- 
