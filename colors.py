@@ -1,5 +1,5 @@
-GRID_COLOR = "#a39489"
-EMPTY_CELL_COLOR = "#c2b3a9"
+GRID_COLOR = "#41f7ca"
+EMPTY_CELL_COLOR = "#f63bc7"
 SCORE_LABEL_FONT = ("Verdana", 20)
 SCORE_FONT = ("Helvetica", 32, "bold")
 GAME_OVER_FONT = ("Helvetica", 48, "bold")
@@ -36,15 +36,15 @@ CELL_NUMBER_COLORS = {
 }
 
 CELL_NUMBER_FONTS = {
-    2: ("Helvetica", 55, "bold"),
-    4: ("Helvetica", 55, "bold"),
-    8: ("Helvetica", 55, "bold"),
-    16: ("Helvetica", 50, "bold"),
-    32: ("Helvetica", 50, "bold"),
-    64: ("Helvetica", 50, "bold"),
-    128: ("Helvetica", 45, "bold"),
-    256: ("Helvetica", 45, "bold"),
-    512: ("Helvetica", 45, "bold"),
-    1024: ("Helvetica", 40, "bold"),
-    2048: ("Helvetica", 40, "bold")
+    2: ("Helvetica", 55, "italic"),
+    4: ("Helvetica", 55, "italic"),
+    8: ("Helvetica", 55, "italic"),
+    16: ("Helvetica", 50, "italic"),
+    32: ("Helvetica", 50, "italic"),
+    64: ("Helvetica", 50, "italic"),
+    128: ("Helvetica", 45, "italic"),
+    256: ("Helvetica", 45, "italic"),
+    512: ("Helvetica", 45, "italic"),
+    1024: ("Helvetica", 40, "italic"),
+    2048: ("Helvetica", 40, "italic")
 }

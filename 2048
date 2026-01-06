@@ -1,0 +1,290 @@
+# Imports
+import tkinter as tk
+import colors as c
+import random
+from tkinter import messagebox
+import os 
+ 
+HIGHSCORE_FILE = "highscore.txt"
+ 
+ 
+# Klassen definieren
+class Game2048(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.grid()
+        self.master.title('2048')
+        self.main_grid = Board(self)
+        self.main_grid.grid(row=2, column=0, columnspan=2, pady=(10,20))
+        self.score_board = ScoreBoard(self)
+        self.restart_button = tk.Button(
+            self,
+            text="Restart",
+            command=self.restart_game,
+            font=("Algerian", 20)
+        ) 
+        self.restart_button.grid(row=1, column=0, pady=25)
+        self.matrix = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ]
+        self.master.bind("<Left>", self.left)
+        self.master.bind("<Right>", self.right)
+        self.master.bind("<Up>", self.up)
+        self.master.bind("<Down>", self.down)
+        self.master.bind("<r>", self.restart_game)
+ 
+    def start_game(self):
+        self.add_new_cell()
+        self.add_new_cell()
+        self.update_GUI()
+       
+    def game_over(self):
+        if not self.horizontal_move_exists() and not self.vertical_move_exists():
+            print("Game over!")
+            tk.messagebox.showinfo("Game over","HAHAHA YOU LOST!!!")
+            return
+ 
+    def update_GUI(self):
+        for i in range(len(self.matrix)):
+            print(i)
+            for j in range(len(self.matrix)):
+                print(j)
+                value = self.matrix[i][j]
+                self.main_grid.configure_cell(i, j, value)
+        self.score_board.configure()
+ 
+    def configure(self):
+        self.wert.config(text=self.score)
+ 
+    def add_new_cell(self):
+        freie_Felder = []
+        for row in range(0, 4):
+            for col in range(0, 4):
+                if self.matrix[row][col] == 0:
+                    freie_Felder.append((row, col))
+        print(freie_Felder)
+        if not freie_Felder:  
+            self.game_over()   
+            return
+        Feld = random.choice(freie_Felder)
+        self.matrix[Feld[0]][Feld[1]] = random.choice([2,2,2,4])
+        value = self.matrix[Feld[0]][Feld[1]]
+        self.main_grid.configure_cell(row, col, value)
+        print(self.matrix)
+       
+    def stack(self):
+        for i in range(0, 4):
+            for x in range(0, 3): 
+                for j in range(0, 3):
+                    if self.matrix[i][j] == 0:
+                        self.matrix[i][j] = self.matrix[i][j+1]
+                        self.matrix[i][j+1] = 0
+          
+    def combine(self):
+        for i in range(0, 4):
+            for j in range(0, 3):
+                if self.matrix[i][j] == self.matrix[i][j+1]:
+                    self.matrix[i][j] *= 2
+                    self.matrix[i][j+1] = 0
+                    self.score_board.add_to_score(self.matrix[i][j])
+        
+    def reverse(self):
+        for i in range(0, 4):
+            self.matrix[i][0], self.matrix[i][3] = self.matrix[i][3], self.matrix[i][0]
+            self.matrix[i][1], self.matrix[i][2] = self.matrix[i][2], self.matrix[i][1]
+         
+ 
+    def transpose(self):
+        for i in range(0,4):
+            for j in range(i+1,4):
+                self.matrix[i][j], self.matrix[j][i] = self.matrix[j][i], self.matrix[i][j] # mit in range 1,3 wird nur die innere 2x2 Matrix transponiert
+ 
+        
+    def left(self, event):
+        self.stack()
+        self.combine()
+        self.stack()
+        if self.check_win():
+            print("you won!")
+            tk.messagebox.showinfo("2048", "you won!")
+        self.add_new_cell()
+        print("Nach Links schieben")
+        self.update_GUI()
+       
+    def right(self, event):
+        self.reverse()
+        self.stack()
+        self.combine()
+        self.stack()
+        self.reverse()
+        if self.check_win():
+            print("you won!")
+            tk.messagebox.showinfo("2048", "you won!")
+        self.add_new_cell()
+        print("Nach Rechts schieben")
+        self.update_GUI()
+         
+    def up(self, event):
+        self.transpose()
+        self.stack()
+        self.combine()
+        self.stack()
+        self.transpose()
+        if self.check_win():
+            print("you won!")
+            tk.messagebox.showinfo("2048", "you won!")
+        self.add_new_cell()
+        print("Nach Oben schieben")
+        self.update_GUI()
+         
+    def down(self, event):
+        self.transpose()
+        self.reverse()
+        self.stack()
+        self.combine()
+        self.stack()
+        self.reverse()
+        self.transpose()
+        if self.check_win():
+            print("you won!")
+            tk.messagebox.showinfo("2048", "you won!")
+        self.add_new_cell()
+        print("Nach Unten schieben")
+        self.update_GUI()
+ 
+    def check_win(self):
+        for i in self.matrix:
+            if 2048 in i:
+                return True
+        return False
+       
+    def horizontal_move_exists(self):
+        for row in self.matrix:
+            for i in range(3):
+                if row[i] == 0 or row[i] == row[i+1]:
+                    return True
+        return False
+   
+    def vertical_move_exists(self):
+        for col in range(4):
+            for row in range(3):
+                if self.matrix[row][col] == 0 or self.matrix[row][col] == self.matrix[row+1][col]:
+                    return True
+        return False
+   
+    def restart_game(self, event=None):
+        self.matrix = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.score_board.score = 0
+        self.score_board.configure()
+        self.start_game()
+ 
+class Cell(tk.Frame):
+    def __init__(self, parent, row, col):
+        tk.Frame.__init__(self, parent)
+        self.config(bg=c.EMPTY_CELL_COLOR,
+            width=100,
+            height=100)
+        self.grid(row=row, column=col, padx=5, pady=5)
+       
+        self.number = tk.Label(parent,
+            bg=c.EMPTY_CELL_COLOR)
+    
+        self.number.place(relx=0.5, rely=0.5, anchor="center")
+       
+        self.number.grid(row=row, column=col)
+ 
+    def configure(self, value):
+        print("configure")
+        if value == 0:
+            self.config(bg=c.EMPTY_CELL_COLOR)
+            self.number.config(
+                bg=c.EMPTY_CELL_COLOR, text="")
+        else:
+            self.config(
+                bg=c.CELL_COLORS[value])
+            self.number.config(
+                bg=c.CELL_COLORS[value],
+                fg=c.CELL_NUMBER_COLORS[value],
+                font=c.CELL_NUMBER_FONTS[value],
+                text=str(value))
+ 
+class Board(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self)
+        self.config(bg=c.GRID_COLOR, bd=3, width=400, height=400)
+        tk.Frame(
+            self, bg=c.GRID_COLOR, bd=3, width=400, height=400)
+       
+        self.cells =[]
+
+        for row in range(0, 4):
+            self.cells.append([])
+            for col in range(0, 4):
+                self.cells[row].append(Cell(self, row, col)) 
+     
+    def configure_cell(self, row, col, value):
+        self.cells[row][col].configure(value)
+ 
+class ScoreBoard(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent)
+        self.grid(row=0, column=0, pady=10)
+        self.score = 0
+        self.highscore = self.load_highscore()
+       
+        self.score_box = tk.Frame(self, bd=5, relief="raised", padx=50, pady=25)
+        self.score_box.grid(row=0, column=0, padx=25)
+        self.high_box = tk.Frame(self, bd=5, relief="raised", padx=50, pady=10)
+        self.high_box.grid(row=0, column=1, padx=25)
+ 
+      
+        tk.Label(self.score_box, text="Score", font=c.SCORE_LABEL_FONT).pack()
+        self.score_label = tk.Label(self.score_box, text=self.score, font=c.SCORE_FONT)
+        self.score_label.pack()  #für die Scor box
+        tk.Label(self.high_box, text="Highscore", font=c.SCORE_LABEL_FONT).pack()
+        self.highscore_label = tk.Label(self.high_box, text=self.highscore, font=c.SCORE_FONT)
+        self.highscore_label.pack()
+ 
+ 
+ 
+    def add_to_score(self, plus):
+        self.score += plus
+        if self.score > self.highscore:
+            self.highscore = self.score
+            self.save_highscore()
+        self.configure()
+ 
+    def configure(self):
+        self.score_label.config(text=self.score)
+        self.highscore_label.config(text=self.highscore)
+ 
+    def reset_score(self):
+        self.score = 0
+        self.configure()
+ 
+    def load_highscore(self):
+        if os.path.exists(HIGHSCORE_FILE):
+            with open(HIGHSCORE_FILE, "r") as f:
+                return int(f.read())
+        return 0
+ 
+    def save_highscore(self):
+        with open(HIGHSCORE_FILE, "w") as f:
+            f.write(str(self.highscore))
+ 
+# Spiel spielen
+if __name__ == "__main__":
+    root = tk.Tk()
+    myGame = Game2048(root)
+
+    myGame.start_game()
+    root.mainloop()
+ 
